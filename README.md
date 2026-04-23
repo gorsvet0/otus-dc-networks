@@ -1,2 +1,2 @@
-# otus-dc-networks
-gorsvet0 Otus Network engineer
+# Data center network design
+Data center network design
