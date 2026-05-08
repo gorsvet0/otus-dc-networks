@@ -1,0 +1,8 @@
+NAME        : client1[1]
+IP/MASK     : 10.10.11.2/24
+GATEWAY     : 10.10.11.1
+DNS         : 
+MAC         : 00:50:79:66:68:06
+LPORT       : 20000
+RHOST:PORT  : 127.0.0.1:30000
+MTU         : 1500

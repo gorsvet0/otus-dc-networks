@@ -1,0 +1,58 @@
+! Command: show running-config
+! device: SP1 (vEOS-lab, EOS-4.29.2F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+aaa root secret sha512 $6$8U9liFShJ6pnaXyn$S9ylfgTLu1xyI0aOoaHIMcAS0RMdBSJNp6b0cBvStdsyOBIzaxCxC2piS5xaz1f/Y.CxIJSi6T7AeB82zT8Nr0
+!
+username admin privilege 15 role network-admin secret sha512 $6$Ue6dPMCltDLdgm2B$dzyiJUTmtsVT799phts9XavOnufl5K6ydn6z/bRusDuxf5CU7BpbC1AWs6h4iHMAIrG23sK4taRF/NTazwOAz0
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+hostname SP1
+!
+spanning-tree mode mstp
+!
+aaa authorization exec default local
+aaa authorization commands all default local
+!
+interface Ethernet1
+   description *LF11-e1*
+   no switchport
+   ip address 10.1.11.0/31
+!
+interface Ethernet2
+   description *LF12-e1*
+   no switchport
+   ip address 10.1.12.0/31
+!
+interface Ethernet3
+   description *LF13-e1*
+   no switchport
+   ip address 10.1.13.0/31
+!
+interface Ethernet4
+   no switchport
+!
+interface Ethernet5
+   no switchport
+!
+interface Ethernet6
+   no switchport
+!
+interface Ethernet7
+   no switchport
+!
+interface Ethernet8
+   no switchport
+!
+interface Loopback1
+   ip address 10.0.1.1/32
+!
+interface Management1
+!
+ip routing
+!
+end

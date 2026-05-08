@@ -1,0 +1,58 @@
+! Command: show running-config
+! device: LF13 (vEOS-lab, EOS-4.29.2F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+aaa root secret sha512 $6$DHW1Wq/p8.isfhU3$Uj3kB4QhJ.oviImb.kwFZ8Z0nrj3ARCY1qXswQSYaS5LhCc9xSS3BR3hBhbyxTdgLfAdazTDtV697o5AINimy.
+!
+username admin privilege 15 role network-admin secret sha512 $6$Be1FHbspzw2u95jU$n22MlUxIiWFg8RN0oGjgCW48L2EXl/5JxmPzoGRaqbbVFt8mPLsYnqHQpdJAOJs7acTAPls/FdKSm9rv2yFDn.
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+hostname LF13
+!
+spanning-tree mode mstp
+!
+aaa authorization exec default local
+aaa authorization commands all default local
+!
+interface Ethernet1
+   description *SP1-e3*
+   no switchport
+   ip address 10.1.13.1/31
+!
+interface Ethernet2
+   description *SP2-e3*
+   no switchport
+   ip address 10.2.13.1/31
+!
+interface Ethernet3
+   description *client3*
+   no switchport
+   ip address 10.20.13.1/24
+!
+interface Ethernet4
+   no switchport
+!
+interface Ethernet5
+   no switchport
+!
+interface Ethernet6
+   no switchport
+!
+interface Ethernet7
+   no switchport
+!
+interface Ethernet8
+   no switchport
+!
+interface Loopback1
+   ip address 10.0.13.1/32
+!
+interface Management1
+!
+ip routing
+!
+end

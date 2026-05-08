@@ -1,0 +1,68 @@
+! Command: show running-config
+! device: LF11 (vEOS-lab, EOS-4.29.2F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+aaa root secret sha512 $6$Zlv4QOvF2ExS2ES5$Mmd/HSFld/OFeqdWr8UlHsKL8tZMv5.Zdr8AcHloOidWDMHoRIDL3DQA5vkR9SRkFwHTFUTCFxXiU0BuWaL2E0
+!
+username admin privilege 15 role network-admin secret sha512 $6$Xhc0DgJF8zfQgc5i$9NYORL7JYNmaYqNb9qCYdYXQpMZjfuntiiTeIdSuEHtEE3qNDFjqJGbaLVs.V0LLEtZ81t1yKn9.6SzplWrIO.
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+hostname LF11
+!
+spanning-tree mode mstp
+!
+aaa authorization exec default local
+aaa authorization commands all default local
+!
+interface Ethernet1
+   description *SP1-e1*
+   no switchport
+   ip address 10.1.11.1/31
+!
+interface Ethernet2
+   description *SP2-e1*
+   no switchport
+   ip address 10.2.11.1/31
+!
+interface Ethernet3
+   description *client1*
+   no switchport
+   ip address 10.10.11.1/24
+!
+interface Ethernet4
+   description *disabled*
+   shutdown
+   no switchport
+!
+interface Ethernet5
+   description *disabled*
+   shutdown
+   no switchport
+!
+interface Ethernet6
+   description *disabled*
+   shutdown
+   no switchport
+!
+interface Ethernet7
+   description *disabled*
+   shutdown
+   no switchport
+!
+interface Ethernet8
+   description *disabled*
+   shutdown
+   no switchport
+!
+interface Loopback1
+   ip address 10.0.11.1/32
+!
+interface Management1
+!
+ip routing
+!
+end
