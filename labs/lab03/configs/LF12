@@ -1,0 +1,78 @@
+! device: LF12 (vEOS-lab, EOS-4.29.2F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+username admin privilege 15 role network-admin secret sha512 $6$Xhc0DgJF8zfQgc5i$9NYORL7JYNmaYqNb9qCYdYXQpMZjfuntiiTeIdSuEHtEE3qNDFjqJGbaLVs.V0LLEtZ81t1yKn9.6SzplWrIO.
+!
+terminal length 0
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+hostname LF12
+!
+spanning-tree mode mstp
+!
+aaa authorization exec default local
+aaa authorization commands all default local
+!
+interface Ethernet1
+   description *SP1-e2*
+   no switchport
+   ip address 10.1.12.1/31
+   isis enable UNDERLAY
+   isis circuit-type level-2
+   isis network point-to-point
+!
+interface Ethernet2
+   description *SP2-e2*
+   no switchport
+   ip address 10.2.12.1/31
+   isis enable UNDERLAY
+   isis circuit-type level-2
+   isis network point-to-point
+!
+interface Ethernet3
+   description *client2*
+   no switchport
+   ip address 10.20.12.1/24
+!
+interface Ethernet4
+   description *client3*
+   no switchport
+   ip address 10.30.12.1/24
+!
+interface Ethernet5
+   shutdown
+!
+interface Ethernet6
+   shutdown
+!
+interface Ethernet7
+   shutdown
+!
+interface Ethernet8
+   shutdown
+!
+interface Loopback1
+   ip address 10.0.12.1/32
+   ip ospf area 0.0.0.0
+   isis enable UNDERLAY
+   isis passive
+!
+interface Management1
+!
+ip routing
+!
+router isis UNDERLAY
+   net 49.0001.0000.0000.0012.00
+   router-id ipv4 10.0.12.1
+   is-type level-2
+   log-adjacency-changes
+   !
+   address-family ipv4 unicast
+!
+end
