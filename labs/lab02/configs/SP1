@@ -4,11 +4,15 @@
 !
 no aaa root
 !
+username admin privilege 15 role network-admin secret sha512 $6$Xhc0DgJF8zfQgc5i$9NYORL7JYNmaYqNb9qCYdYXQpMZjfuntiiTeIdSuEHtEE3qNDFjqJGbaLVs.V0LLEtZ81t1yKn9.6SzplWrIO.
+!
 terminal length 0
 !
 transceiver qsfp default-mode 4x10G
 !
 service routing protocols model multi-agent
+!
+logging synchronous level informational
 !
 hostname SP1
 !
@@ -22,24 +26,33 @@ interface Ethernet1
    mtu 9214
    no switchport
    ip address 10.1.11.0/31
+   bfd interval 100 min-rx 100 multiplier 3
    ip ospf network point-to-point
+   ip ospf authentication message-digest
    ip ospf area 0.0.0.0
+   ip ospf message-digest-key 1 md5 7 0oU8PuR9fIjIfBEdP9oAAw==
 !
 interface Ethernet2
    description *LF12-e1*
    mtu 9214
    no switchport
    ip address 10.1.12.0/31
+   bfd interval 100 min-rx 100 multiplier 3
    ip ospf network point-to-point
+   ip ospf authentication message-digest
    ip ospf area 0.0.0.0
+   ip ospf message-digest-key 1 md5 7 Aq3+m3Y0zZLaDB80roLSMg==
 !
 interface Ethernet3
    description *LF13-e1*
    mtu 9214
    no switchport
    ip address 10.1.13.0/31
+   bfd interval 100 min-rx 100 multiplier 3
    ip ospf network point-to-point
+   ip ospf authentication message-digest
    ip ospf area 0.0.0.0
+   ip ospf message-digest-key 1 md5 7 Aq3+m3Y0zZLaDB80roLSMg==
 !
 interface Ethernet4
    shutdown
@@ -66,6 +79,7 @@ ip routing
 !
 router ospf 1
    router-id 10.0.1.1
+   bfd default
    passive-interface default
    no passive-interface Ethernet1
    no passive-interface Ethernet2
