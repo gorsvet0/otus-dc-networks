@@ -1,0 +1,78 @@
+! Command: show running-config
+! device: LF13 (vEOS-lab, EOS-4.29.2F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+username admin privilege 15 role network-admin secret sha512 $6$Xhc0DgJF8zfQgc5i$9NYORL7JYNmaYqNb9qCYdYXQpMZjfuntiiTeIdSuEHtEE3qNDFjqJGbaLVs.V0LLEtZ81t1yKn9.6SzplWrIO.
+!
+terminal length 0
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+logging synchronous level critical
+!
+hostname LF13
+!
+spanning-tree mode mstp
+!
+aaa authorization exec default local
+aaa authorization commands all default local
+!
+interface Ethernet1
+   description *SP1-e3*
+   mtu 9214
+   no switchport
+   ip address 10.1.13.1/31
+!
+interface Ethernet2
+   description *SP2-e3*
+   mtu 9214
+   no switchport
+   ip address 10.2.13.1/31
+!
+interface Ethernet3
+   description *client3*
+   no switchport
+   ip address 10.40.13.1/24
+!
+interface Ethernet4
+   shutdown
+!
+interface Ethernet5
+   shutdown
+!
+interface Ethernet6
+   shutdown
+!
+interface Ethernet7
+   shutdown
+!
+interface Ethernet8
+   shutdown
+!
+interface Loopback1
+   ip address 10.0.13.1/32
+!
+interface Management1
+!
+ip routing
+!
+router bgp 65103
+   router-id 10.0.11.3
+   maximum-paths 4 ecmp 4
+   neighbor SPINES peer group
+   neighbor SPINES remote-as 65100
+   neighbor SPINES bfd
+   neighbor SPINES timers 1 3
+   neighbor 10.1.13.0 peer group SPINES
+   neighbor 10.2.13.0 peer group SPINES
+   !
+   address-family ipv4
+      neighbor SPINES activate
+      network 10.0.13.1/32
+!
+end
