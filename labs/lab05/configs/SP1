@@ -1,0 +1,90 @@
+! Command: show running-config
+! device: SP1 (vEOS-lab, EOS-4.29.2F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+username admin privilege 15 role network-admin secret sha512 $6$Xhc0DgJF8zfQgc5i$9NYORL7JYNmaYqNb9qCYdYXQpMZjfuntiiTeIdSuEHtEE3qNDFjqJGbaLVs.V0LLEtZ81t1yKn9.6SzplWrIO.
+!
+terminal length 0
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+logging synchronous level critical
+!
+hostname SP1
+!
+spanning-tree mode mstp
+!
+aaa authorization exec default local
+aaa authorization commands all default local
+!
+interface Ethernet1
+   description *LF11-e1*
+   mtu 9214
+   no switchport
+   ip address 10.1.11.0/31
+!
+interface Ethernet2
+   description *LF12-e1*
+   mtu 9214
+   no switchport
+   ip address 10.1.12.0/31
+!
+interface Ethernet3
+   description *LF13-e1*
+   mtu 9214
+   no switchport
+   ip address 10.1.13.0/31
+!
+interface Ethernet4
+   shutdown
+!
+interface Ethernet5
+   shutdown
+!
+interface Ethernet6
+   shutdown
+!
+interface Ethernet7
+   shutdown
+!
+interface Ethernet8
+   shutdown
+!
+interface Loopback1
+   ip address 10.0.1.1/32
+!
+interface Management1
+!
+ip routing
+!
+router bgp 65100
+   router-id 10.0.1.1
+   maximum-paths 3 ecmp 3
+   neighbor LEAFS peer group
+   neighbor LEAFS bfd
+   neighbor LEAFS password 7 qcZqPZg4u36aJMQlNFmhpQ==
+   neighbor LEAFS send-community extended
+   neighbor 10.1.11.1 peer group LEAFS
+   neighbor 10.1.11.1 remote-as 65101
+   neighbor 10.1.11.1 description LF11
+   neighbor 10.1.12.1 peer group LEAFS
+   neighbor 10.1.12.1 remote-as 65102
+   neighbor 10.1.12.1 description LF12
+   neighbor 10.1.13.1 peer group LEAFS
+   neighbor 10.1.13.1 remote-as 65103
+   neighbor 10.1.13.1 description LF13
+   !
+   address-family evpn
+      neighbor LEAFS activate
+      neighbor LEAFS encapsulation vxlan 
+   !
+   address-family ipv4
+      neighbor LEAFS activate
+      network 10.0.1.1/32
+!
+end
