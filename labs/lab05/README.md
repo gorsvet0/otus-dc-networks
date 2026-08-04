@@ -19,9 +19,9 @@
 | Client1  | LF11       | Eth3     | 10       | 192.168.10.11/24   |
 | Client2  | LF11       | Eth4     | 20       | 192.168.20.11/24   |
 | Client3  | LF12       | Eth3     | 10       | 192.168.10.12/24  |
-| Client4  | LF12       | Eth4     | 20       | 192.168.10.12/24   |
+| Client4  | LF12       | Eth4     | 20       | 192.168.20.12/24   |
 | Client5  | LF13       | Eth3     | 10       | 192.168.10.13/24   |
-| Client6  | LF13       | Eth4     | 20       | 192.168.10.13/24   |
+| Client6  | LF13       | Eth4     | 20       | 192.168.20.13/24   |
 
 <details>
 <summary> <b>Настройка underlay eBGP</b></summary>
