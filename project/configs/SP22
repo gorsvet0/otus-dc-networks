@@ -1,0 +1,109 @@
+! Command: show running-config
+! device: SP22 (vEOS-lab, EOS-4.36.1F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+no service interface inactive port-id allocation disabled
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+hostname SP22
+!
+spanning-tree mode mstp
+!
+system l1
+   unsupported speed action error
+   unsupported error-correction action error
+!
+interface Ethernet1
+   description TO_LF211
+   no switchport
+   ip address 10.12.11.5/30
+   bfd interval 1000 min-rx 1000 multiplier 3
+   ip ospf network point-to-point
+   ip ospf area 0.0.0.0
+!
+interface Ethernet2
+   description TO_LF212
+   no switchport
+   ip address 10.12.12.5/30
+   bfd interval 1000 min-rx 1000 multiplier 3
+   ip ospf network point-to-point
+   ip ospf area 0.0.0.0
+!
+interface Ethernet3
+   description TO_BGW2111
+   no switchport
+   ip address 10.12.2.2/30
+   bfd interval 1000 min-rx 1000 multiplier 3
+   ip ospf network point-to-point
+   ip ospf area 0.0.0.0
+!
+interface Ethernet4
+   description TO_BGW2112
+   no switchport
+   ip address 10.12.2.6/30
+   bfd interval 1000 min-rx 1000 multiplier 3
+   ip ospf network point-to-point
+   ip ospf area 0.0.0.0
+!
+interface Ethernet5
+!
+interface Ethernet6
+!
+interface Ethernet7
+!
+interface Ethernet8
+!
+interface Loopback1
+   description UNDERLAY_VTEP
+   ip address 10.2.2.1/32
+   ip ospf area 0.0.0.0
+!
+interface Management1
+!
+ip routing
+!
+router bgp 65000
+   router-id 10.2.2.1
+   no bgp default ipv4-unicast
+   distance bgp 20 200 20
+   bgp cluster-id 10.2.2.1
+   neighbor BGW peer group
+   neighbor BGW remote-as 65000
+   neighbor BGW update-source Loopback1
+   neighbor BGW route-reflector-client
+   neighbor BGW send-community extended
+   neighbor LEAF peer group
+   neighbor LEAF remote-as 65000
+   neighbor LEAF update-source Loopback1
+   neighbor LEAF route-reflector-client
+   neighbor LEAF send-community extended
+   neighbor 10.2.11.1 peer group LEAF
+   neighbor 10.2.12.1 peer group LEAF
+   neighbor 10.2.111.1 peer group BGW
+   neighbor 10.2.112.1 peer group BGW
+   !
+   address-family evpn
+      neighbor BGW activate
+      neighbor LEAF activate
+   !
+   address-family ipv4
+      no neighbor BGW activate
+      no neighbor LEAF activate
+!
+router ospf 1
+   router-id 10.2.2.1
+   bfd default
+   passive-interface default
+   no passive-interface Ethernet1
+   no passive-interface Ethernet2
+   no passive-interface Ethernet3
+   no passive-interface Ethernet4
+   max-lsa 12000
+!
+end

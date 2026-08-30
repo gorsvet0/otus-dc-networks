@@ -1,0 +1,39 @@
+! Command: show running-config
+! device: OLD-CORE (vEOS-lab, EOS-4.36.1F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+no service interface inactive port-id allocation disabled
+!
+service routing protocols model multi-agent
+!
+hostname OLD-CORE
+!
+spanning-tree mode mstp
+!
+system l1
+   unsupported speed action error
+   unsupported error-correction action error
+!
+vlan 40
+   name VLAN40_LEGACY
+!
+interface Ethernet1
+   description TO_LF111
+   switchport trunk allowed vlan 40
+   switchport mode trunk
+!
+interface Ethernet2
+   description TO_OLD_SRV
+   switchport access vlan 40
+   spanning-tree portfast edge
+!
+interface Ethernet3
+!
+interface Management1
+!
+no ip routing
+!
+end

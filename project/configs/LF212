@@ -1,0 +1,143 @@
+! Command: show running-config
+! device: LF212 (vEOS-lab, EOS-4.36.1F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+no service interface inactive port-id allocation disabled
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+hostname LF212
+!
+spanning-tree mode mstp
+!
+system l1
+   unsupported speed action error
+   unsupported error-correction action error
+!
+vlan 10
+   name VLAN10_STRETCH
+!
+vlan 30
+   name VLAN30_ISOLATED
+!
+vrf instance TENANT
+!
+interface Port-Channel10
+   description ESI_cl210_VLAN10
+   switchport access vlan 10
+   !
+   evpn ethernet-segment
+      identifier 0000:0000:0000:0010:0002
+   lacp system-id 0000.0000.0010
+   spanning-tree portfast edge
+!
+interface Port-Channel30
+   description ESI_cl230_VLAN30
+   switchport access vlan 30
+   !
+   evpn ethernet-segment
+      identifier 0000:0000:0000:0030:0001
+   lacp system-id 0000.0000.0030
+   spanning-tree portfast edge
+!
+interface Ethernet1
+   description TO_SP21
+   no switchport
+   ip address 10.12.12.2/30
+   bfd interval 1000 min-rx 1000 multiplier 3
+   ip ospf network point-to-point
+   ip ospf area 0.0.0.0
+!
+interface Ethernet2
+   description TO_SP22
+   no switchport
+   ip address 10.12.12.6/30
+   bfd interval 1000 min-rx 1000 multiplier 3
+   ip ospf network point-to-point
+   ip ospf area 0.0.0.0
+!
+interface Ethernet3
+   description TO_cl210_LAG
+   channel-group 10 mode active
+!
+interface Ethernet4
+   description TO_cl230_LAG
+   channel-group 30 mode active
+!
+interface Ethernet5
+!
+interface Ethernet6
+!
+interface Ethernet7
+!
+interface Ethernet8
+!
+interface Loopback1
+   description UNDERLAY_VTEP
+   ip address 10.2.12.1/32
+   ip ospf area 0.0.0.0
+!
+interface Management1
+!
+interface Vlan10
+   description ANYCAST_GW_VLAN10
+   vrf TENANT
+   ip address virtual 192.168.10.1/24
+!
+interface Vlan30
+   description ANYCAST_GW_VLAN30
+   vrf TENANT
+   ip address virtual 192.168.30.1/24
+!
+interface Vxlan1
+   vxlan source-interface Loopback1
+   vxlan udp-port 4789
+   vxlan vlan 10 vni 10010
+   vxlan vlan 30 vni 10030
+   vxlan vrf TENANT vni 9999
+!
+ip virtual-router mac-address 00:1c:73:00:11:11
+!
+ip routing
+ip routing vrf TENANT
+!
+router bgp 65000
+   router-id 10.2.12.1
+   no bgp default ipv4-unicast
+   neighbor SPINES peer group
+   neighbor SPINES remote-as 65000
+   neighbor SPINES update-source Loopback1
+   neighbor SPINES send-community extended
+   neighbor 10.2.1.1 peer group SPINES
+   neighbor 10.2.2.1 peer group SPINES
+   !
+   vlan-aware-bundle TENANT_VLANS
+      rd 10.2.12.1:10010
+      route-target both 1:10010
+      route-target both 1:10030
+      redistribute learned
+      vlan 10,30
+   !
+   address-family evpn
+      neighbor SPINES activate
+   !
+   vrf TENANT
+      rd 10.2.12.1:9999
+      route-target import evpn 1:9999
+      route-target export evpn 1:9999
+      redistribute connected
+!
+router ospf 1
+   router-id 10.2.12.1
+   bfd default
+   passive-interface default
+   no passive-interface Ethernet1
+   no passive-interface Ethernet2
+   max-lsa 12000
+!
+end

@@ -1,0 +1,49 @@
+! Command: show running-config
+! device: cl210 (vEOS-lab, EOS-4.36.1F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+no service interface inactive port-id allocation disabled
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+hostname cl210
+!
+spanning-tree mode mstp
+!
+system l1
+   unsupported speed action error
+   unsupported error-correction action error
+!
+vlan 10
+   name VLAN10_STRETCH
+!
+interface Port-Channel10
+   description LAG_TO_LEAFS
+   switchport access vlan 10
+   spanning-tree portfast edge
+!
+interface Ethernet1
+   description TO_LF211
+   channel-group 10 mode active
+!
+interface Ethernet2
+   description TO_LF212
+   channel-group 10 mode active
+!
+interface Ethernet3
+!
+interface Management1
+!
+interface Vlan10
+   ip address 192.168.10.21/24
+!
+ip routing
+!
+ip route 0.0.0.0/0 192.168.10.1
+!
+end

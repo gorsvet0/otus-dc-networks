@@ -1,0 +1,72 @@
+! Command: show running-config
+! device: DCI-WAN-CORE (vEOS-lab, EOS-4.36.1F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+no service interface inactive port-id allocation disabled
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+hostname DCI_WAN_CORE
+!
+spanning-tree mode mstp
+!
+system l1
+   unsupported speed action error
+   unsupported error-correction action error
+!
+interface Ethernet1
+   description TO_BGW1111
+   no switchport
+   ip address 172.16.1.2/30
+   bfd interval 1000 min-rx 1000 multiplier 3
+   ip ospf area 0.0.0.0
+!
+interface Ethernet2
+   description TO_BGW1112
+   no switchport
+   ip address 172.16.2.2/30
+   bfd interval 1000 min-rx 1000 multiplier 3
+   ip ospf area 0.0.0.0
+!
+interface Ethernet3
+   description TO_BGW2111
+   no switchport
+   ip address 172.16.3.2/30
+   bfd interval 1000 min-rx 1000 multiplier 3
+   ip ospf area 0.0.0.0
+!
+interface Ethernet4
+   description TO_BGW2112
+   no switchport
+   ip address 172.16.4.2/30
+   bfd interval 1000 min-rx 1000 multiplier 3
+   ip ospf area 0.0.0.0
+!
+interface Ethernet5
+!
+interface Ethernet6
+!
+interface Ethernet7
+!
+interface Ethernet8
+!
+interface Management1
+!
+ip routing
+!
+router ospf 1
+   router-id 172.16.1.2
+   bfd default
+   passive-interface default
+   no passive-interface Ethernet1
+   no passive-interface Ethernet2
+   no passive-interface Ethernet3
+   no passive-interface Ethernet4
+   max-lsa 12000
+!
+end

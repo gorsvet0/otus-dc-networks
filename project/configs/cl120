@@ -1,0 +1,49 @@
+! Command: show running-config
+! device: cl120 (vEOS-lab, EOS-4.36.1F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+no service interface inactive port-id allocation disabled
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+hostname cl120
+!
+spanning-tree mode mstp
+!
+system l1
+   unsupported speed action error
+   unsupported error-correction action error
+!
+vlan 20
+   name VLAN20_STRETCH
+!
+interface Port-Channel20
+   description LAG_TO_LEAFS
+   switchport access vlan 20
+   spanning-tree portfast edge
+!
+interface Ethernet1
+   description TO_LF111
+   channel-group 20 mode active
+!
+interface Ethernet2
+   description TO_LF112
+   channel-group 20 mode active
+!
+interface Ethernet3
+!
+interface Management1
+!
+interface Vlan20
+   ip address 192.168.20.12/24
+!
+ip routing
+!
+ip route 0.0.0.0/0 192.168.20.1
+!
+end

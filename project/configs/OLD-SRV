@@ -1,0 +1,55 @@
+! Command: show running-config
+! device: OLD-SRV (vEOS-lab, EOS-4.36.1F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+no service interface inactive port-id allocation disabled
+!
+service routing protocols model multi-agent
+!
+hostname OLD-SRV
+!
+spanning-tree mode mstp
+!
+system l1
+   unsupported speed action error
+   unsupported error-correction action error
+!
+vlan 40
+   name VLAN40_LEGACY
+!
+interface Ethernet1
+   description TO_OLD_CORE
+   switchport access vlan 40
+   spanning-tree portfast edge
+!
+interface Ethernet2
+   description TO_LF111
+   shutdown
+   switchport access vlan 40
+   spanning-tree portfast edge
+!
+interface Ethernet3
+!
+interface Ethernet4
+!
+interface Ethernet5
+!
+interface Ethernet6
+!
+interface Ethernet7
+!
+interface Ethernet8
+!
+interface Management1
+!
+interface Vlan40
+   ip address 192.168.40.10/24
+!
+ip routing
+!
+ip route 0.0.0.0/0 192.168.40.1
+!
+end
